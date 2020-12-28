@@ -22,6 +22,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
@@ -182,6 +184,7 @@ public class FODCircleView extends ImageView {
         public void onScreenTurnedOn() {
             if (mUpdateMonitor.isFingerprintDetectionRunning()) {
                 show();
+                triggerFodIconAnimation();
             }
         }
     };
@@ -542,4 +545,10 @@ public class FODCircleView extends ImageView {
             mHandler.post(() -> updatePosition());
         }
     };
+
+    public void triggerFodIconAnimation() {
+        AnimatedVectorDrawable fodIconAnimatedVectorDrawable = (AnimatedVectorDrawable) mContext.getDrawable(R.drawable.fod_icon_default_animated);
+        setImageDrawable(fodIconAnimatedVectorDrawable);
+        fodIconAnimatedVectorDrawable.start();
+    }
 }
