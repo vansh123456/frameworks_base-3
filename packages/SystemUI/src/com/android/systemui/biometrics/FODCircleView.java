@@ -55,7 +55,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class FODCircleView extends ImageView {
-    private static final int FADE_ANIM_DURATION = 125;
+    private static final int FADE_ANIM_DURATION = 50;
 
     private final int mPositionX;
     private final int mPositionY;
@@ -89,6 +89,8 @@ public class FODCircleView extends ImageView {
     private LockPatternUtils mLockPatternUtils;
 
     private Timer mBurnInProtectionTimer;
+
+    private AnimatedVectorDrawable mFodIconAnimatedVectorDrawable;
 
     private IFingerprintInscreenCallback mFingerprintInscreenCallback =
             new IFingerprintInscreenCallback.Stub() {
@@ -183,8 +185,9 @@ public class FODCircleView extends ImageView {
         @Override
         public void onScreenTurnedOn() {
             if (mUpdateMonitor.isFingerprintDetectionRunning()) {
+                setImageDrawable(null);
                 show();
-                triggerFodIconAnimation();
+                mHandler.post(() -> toggleFodIconAnimation());
             }
         }
     };
@@ -546,9 +549,10 @@ public class FODCircleView extends ImageView {
         }
     };
 
-    public void triggerFodIconAnimation() {
-        AnimatedVectorDrawable fodIconAnimatedVectorDrawable = (AnimatedVectorDrawable) mContext.getDrawable(R.drawable.fod_icon_default_animated);
-        setImageDrawable(fodIconAnimatedVectorDrawable);
-        fodIconAnimatedVectorDrawable.start();
+    public void toggleFodIconAnimation() {
+        mFodIconAnimatedVectorDrawable = (AnimatedVectorDrawable) mContext.getDrawable(
+            R.drawable.fod_icon_default_animated);
+        setImageDrawable(mFodIconAnimatedVectorDrawable);
+        mFodIconAnimatedVectorDrawable.start();
     }
 }
